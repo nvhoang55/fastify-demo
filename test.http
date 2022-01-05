@@ -1,0 +1,11 @@
+### Hello world
+GET http://localhost:5000/
+Accept: application/json
+
+### Get all todos
+GET http://localhost:5000/todos/
+Accept: application/json
+
+### Get a single todo
+GET http://localhost:5000/todos/3
+Accept: application/json

@@ -1,15 +1,20 @@
 import Fastify from "fastify";
+import todoRoutes from "./routes/todos.js";
 
 const fastify = Fastify({
-    logger: true
+    logger: {
+        prettyPrint: true
+    }
 });
 const PORT = 5000;
 
 // section Routes
 fastify.get("/", (request, reply) =>
 {
-    reply.send("Hello World");
+    reply.send({hello: "world"});
 });
+
+fastify.register(todoRoutes, {prefix: "todos"});
 
 // section Start server
 const start = async () =>

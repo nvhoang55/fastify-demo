@@ -16,5 +16,8 @@
     "fastify-swagger": "^4.13.0",
     "nodemon": "^2.0.15",
     "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "pino-pretty": "^7.3.0"
   }
 }
