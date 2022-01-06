@@ -1,50 +1,18 @@
-import todos from "../data.js";
-
-// section Schemas
-const Todo = {
-    type: "object",
-    properties: {
-        userId: {type: "string"},
-        id: {type: "string"},
-        title: {type: "string"},
-        completed: {type: "boolean"}
-    }
-};
-const getTodosOpts = {
-    schema: {
-        response: {
-            200: {
-                type: "array",
-                items: Todo
-            }
-        }
-    }
-};
-
-const getTodoOpts = {
-    schema: {
-        response: {
-            200: Todo
-        }
-    }
-};
+import {addTodo, getCount, getTodo, getTodos} from "../controllers/todos.js";
 
 export default async (fastify, options, done) =>
 {
     // section All todos
-    fastify.get("/", getTodosOpts, (request, reply) =>
-    {
-        reply.send(todos);
-    });
+    fastify.get("/", getTodos);
 
     // section Single todo
-    fastify.get("/:id", getTodoOpts, (request, reply) =>
-    {
-        const {id} = request.params;
-        const todo = todos.find(todo => (todo.id === parseInt(id)));
+    fastify.get("/:id", getTodo);
 
-        reply.send(todo ?? "No todo with id " + id);
-    });
+    // section Count
+    fastify.get("/count", getCount);
+
+    // section Add
+    fastify.post("/add", addTodo);
 
     done();
 }

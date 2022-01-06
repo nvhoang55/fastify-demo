@@ -1,12 +1,21 @@
 import Fastify from "fastify";
 import todoRoutes from "./routes/todos.js";
+import fastifySwagger from "fastify-swagger";
 
+// section Init
 const fastify = Fastify({
-    logger: {
-        prettyPrint: true
-    }
+    logger: {prettyPrint: true}
 });
 const PORT = 5000;
+
+// section Pluggins
+fastify.register(fastifySwagger, {
+    exposeRoute: true,
+    routePrefix: "/docs",
+    swagger: {
+        info: {title: "fastify-api"}
+    }
+});
 
 // section Routes
 fastify.get("/", (request, reply) =>
