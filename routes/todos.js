@@ -1,4 +1,4 @@
-import {addTodo, getCount, getTodo, getTodos} from "../controllers/todos.js";
+import {addTodo, deleteTodo, getCount, getTodo, getTodos, updateTodo} from "../controllers/todos.js";
 
 export default async (fastify, options, done) =>
 {
@@ -13,6 +13,12 @@ export default async (fastify, options, done) =>
 
     // section Add
     fastify.post("/add", addTodo);
+
+    // section Delete
+    fastify.delete("/delete/:id", deleteTodo);
+
+    // section Delete
+    fastify.put("/update/:id", updateTodo);
 
     done();
 }

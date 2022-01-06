@@ -1,5 +1,7 @@
-import todos from "../data.js";
+import data from "../data.js";
 import {v4 as uuid} from "uuid";
+
+let todos = data;
 
 const Todo = {
     type: "object",
@@ -84,5 +86,66 @@ export const addTodo = {
         todos.push(newTodo);
 
         reply.code(201).send(newTodo);
+    }
+};
+
+// section Delete a todo
+export const deleteTodo = {
+    schema: {
+        response: {
+            200: {
+                type: "object",
+                properties: {
+                    message: {type: "string"}
+                }
+            }
+        }
+    },
+    handler: (request, reply) =>
+    {
+        const {id} = request.params;
+
+        // return if not found id
+        if (!todos.some(todo => todo.id === parseInt(id)))
+        {
+            reply.send(`No item with the id #${id}`);
+        }
+
+        todos = todos.filter(todo => todo.id !== parseInt(id));
+        reply.send(`Successfully deleted item #${id}`);
+    }
+};
+
+// section Update a todo
+export const updateTodo = {
+    schema: {
+        body: {
+            type: "object",
+            properties: {
+                title: {type: "string"},
+                completed: {type: "boolean"}
+            }
+        },
+        response: {
+            200: Todo
+        }
+    },
+    handler: (request, reply) =>
+    {
+        console.log("request.body", request.body);
+
+        const {id} = request.params;
+        const {title, completed} = request.body;
+
+        if (!todos.some(todo => todo.id.toString() === id))
+        {
+            reply.send(`No item with the id #${id}`);
+        }
+
+        todos = todos.map(todo => (todo.id.toString() === id ? {...todo, title, completed} : todo));
+        // const index = todos.findIndex(todo => todo.id === parseInt(id));
+        // todos[index] = {...todos[index], title, completed};
+
+        reply.send("Successfully updated");
     }
 };
