@@ -24,3 +24,5 @@ export default async (fastify, options, done) =>
 
   done();
 };
+
+export const autoPrefix = '/todos';

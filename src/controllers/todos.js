@@ -130,8 +130,6 @@ export const updateTodo = {
   },
   handler: (request, reply) =>
   {
-    console.log('request.body', request.body);
-
     const { id } = request.params;
     const { title, completed } = request.body;
 
