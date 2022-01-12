@@ -3,9 +3,9 @@
 const User = {
   type: 'object',
   properties: {
-    id: { type: 'string' },
+    id: { type: 'integer' },
     name: { type: 'string' },
-    email: { type: 'boolean' },
+    email: { type: 'string' },
   },
 };
 
@@ -22,39 +22,49 @@ export const getUsers = {
   async handler(request, reply)
   {
     const allUsers = await this.prisma.user.findMany();
-    console.log('allUsers', allUsers);
     reply.send(allUsers);
   },
 };
 
-// // section Single User
-// export const getUser = {
-//   schema: {
-//     response: {
-//       200: User,
-//     },
-//   },
-//   handler: (request, reply) =>
-//   {
-//     const { id } = request.params;
-//     const User = Users.find((User) => (User.id === parseInt(id)));
-//
-//     reply.send(User ?? `No User with id ${id}`);
-//   },
-// };
-//
-// // section Count
-// export const getCount = {
-//   schema: {
-//     response: {
-//       200: {
-//         type: 'number',
-//       },
-//     },
-//   },
-//   handler: (request, reply) => reply.send(Users.length),
-// };
-//
+// section Single User
+export const getUser = {
+  schema: {
+    params: {
+      id: { type: 'integer' },
+    },
+    response: {
+      200: User,
+    },
+  },
+  async handler(request, reply)
+  {
+    const { id } = request.params;
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    reply.send(user ?? `No User with id ${id}`);
+  },
+};
+
+// section Count
+export const getCount = {
+  schema: {
+    response: {
+      200: {
+        type: 'number',
+      },
+    },
+  },
+  async handler(request, reply)
+  {
+    const users = await this.prisma.user.findMany();
+    reply.send(users.length);
+  },
+};
+
 // section Add a User
 export const addUser = {
   schema: {
@@ -88,33 +98,38 @@ export const addUser = {
   },
 };
 
-// // section Delete a User
-// export const deleteUser = {
-//   schema: {
-//     response: {
-//       200: {
-//         type: 'object',
-//         properties: {
-//           message: { type: 'string' },
-//         },
-//       },
-//     },
-//   },
-//   handler: (request, reply) =>
-//   {
-//     const { id } = request.params;
-//
-//     // return if not found id
-//     if (!Users.some((User) => User.id === parseInt(id)))
-//     {
-//       reply.send(`No item with the id #${id}`);
-//     }
-//
-//     Users = Users.filter((User) => User.id !== parseInt(id));
-//     reply.send(`Successfully deleted item #${id}`);
-//   },
-// };
-//
+// section Delete a User
+export const deleteUser = {
+  schema: {
+    params: {
+      id: { type: 'integer' },
+    },
+    response: {
+      200: {
+        type: 'object',
+        properties: {
+          message: { type: 'string' },
+        },
+      },
+    },
+  },
+  async handler(request, reply)
+  {
+    const { id } = request.params;
+
+    if (await this.prisma.user.findUnique({ where: { id } }))
+    {
+      await this.prisma.user.delete({
+        where: { id },
+      });
+
+      reply.send('Successfully deleted!');
+    }
+
+    reply.send('No user with given id.'); await this.prisma.$disconnect();
+  },
+};
+
 // section Update a User
 export const updateUser = {
   schema: {
