@@ -1,13 +1,4 @@
-// const Users = data;
-
-const User = {
-  type: 'object',
-  properties: {
-    id: { type: 'integer' },
-    name: { type: 'string' },
-    email: { type: 'string' },
-  },
-};
+import User from '../models/user.js';
 
 // section All Users
 export const getUsers = {

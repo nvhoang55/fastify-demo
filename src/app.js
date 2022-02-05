@@ -6,6 +6,7 @@ import { dirname, join } from 'path';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import pkg from '@prisma/client';
 import dotenv from 'dotenv';
+import fastifyJWT from 'fastify-jwt';
 
 dotenv.config();
 
@@ -38,8 +39,16 @@ export default (opts = {}) =>
     },
   });
 
+  app.register(fastifyJWT, {
+    secret: process.env.JWT_SECRET,
+    sign: {
+      expiresIn: '72h',
+    },
+  });
+
   // section Decorators
   app.decorate('prisma', prisma);
+  // app.decorate('passport', passport);
 
   return app;
 };
