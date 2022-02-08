@@ -17,30 +17,28 @@ export default fp(async (fastify) =>
   fastify.register(fastifyPassport.secureSession());
 
   fastifyPassport.use('local', new LocalStrategy(
+    {
+      usernameField: 'email',
+      passwordField: 'password',
+    },
     async (email, password, done) =>
     {
-      const user = await this.prisma.user.findUnique({
+      const user = await fastify.prisma.user.findUnique({
         where: { email },
-        select: {
-          email: true,
-          password: true,
-        },
-      })
-        .then(() =>
-        {
-          if (!user)
-          {
-            return done(null, false);
-          }
-          if (!bcrypt.compareSync(password, user.password))
-          {
-            return done(null, false);
-          }
-          return done(null, user);
-        })
-        .catch((err) => done(err));
-    },
-  ));
+      });
 
+      if (user === {})
+      {
+        return done(null, 'Invalid email or password');
+      }
+      if (!bcrypt.compareSync(password, user.password))
+      {
+        return done(null, 'Invalid email or password');
+      }
+
+      return done(null, user);
+    },
+
+  ));
   fastify.decorate('passport', fastifyPassport);
 });

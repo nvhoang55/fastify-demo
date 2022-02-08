@@ -39,12 +39,12 @@ export default (opts = {}) =>
     },
   });
 
-  app.register(fastifyJWT, {
-    secret: process.env.JWT_SECRET,
-    sign: {
-      expiresIn: '72h',
-    },
-  });
+  // app.register(fastifyJWT, {
+  //   secret: process.env.JWT_SECRET,
+  //   sign: {
+  //     expiresIn: '72h',
+  //   },
+  // });
 
   // section Decorators
   app.decorate('prisma', prisma);

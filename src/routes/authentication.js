@@ -4,9 +4,14 @@ export default async (fastify, options, done) =>
 {
   fastify.post('/register', register);
 
-  fastify.route({
-    method: 'POST',
-    url: '/login',
+  fastify.post('/test', {
+    handler(request, reply)
+    {
+      reply.send('testing');
+    },
+  });
+
+  fastify.post('/login', {
     schema: {
       body: {
         type: 'object',
@@ -26,16 +31,17 @@ export default async (fastify, options, done) =>
       },
     },
     preValidation: fastify.passport.authenticate('local', {
-      successRedirect: '/',
       authInfo: false,
+      session: false,
     }),
     async handler(request, reply)
     {
       // take the user object from authenticated request
       // return jwt signatute for it
       const payload = request.user;
-      const token = fastify.jwt.sign({ payload });
-      reply.send({ token });
+      // const token = fastify.jwt.sign({ payload });
+      // reply.send({ token });
+      reply.send(payload);
     },
   });
 
