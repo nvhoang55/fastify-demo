@@ -22,6 +22,13 @@ export default (opts = {}) =>
 {
   const app = fastify(opts);
 
+  app.register(fastifyJWT, {
+    secret: process.env.JWT_SECRET,
+    sign: {
+      expiresIn: '72h',
+    },
+  });
+
   // section Registers
   app.register(autoLoad, {
     dir: join(__dirname, 'plugins'),
@@ -38,13 +45,6 @@ export default (opts = {}) =>
       info: { title: 'fastify-api' },
     },
   });
-
-  // app.register(fastifyJWT, {
-  //   secret: process.env.JWT_SECRET,
-  //   sign: {
-  //     expiresIn: '72h',
-  //   },
-  // });
 
   // section Decorators
   app.decorate('prisma', prisma);

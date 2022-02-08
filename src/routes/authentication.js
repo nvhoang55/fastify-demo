@@ -30,10 +30,10 @@ export default async (fastify, options, done) =>
         },
       },
     },
-    preValidation: fastify.passport.authenticate('local', {
-      authInfo: false,
-      session: false,
-    }),
+    // preValidation: fastify.passport.authenticate('local', {
+    //   authInfo: false,
+    //   session: false,
+    // }),
     async handler(request, reply)
     {
       // take the user object from authenticated request
